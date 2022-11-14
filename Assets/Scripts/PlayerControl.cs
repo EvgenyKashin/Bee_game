@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {   
@@ -73,7 +74,9 @@ public class PlayerControl : MonoBehaviour
             rb.AddTorque(-transform.forward * horizontalInput * horizontalForseMultiplier);
             isControlled = true;
         } else {
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z / 1.05f);
+            if (difficulty == DifficultyLevel.Easy) {
+                rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z / 1.05f);
+            }
         }
 
         // Mouse vertical input
@@ -86,7 +89,9 @@ public class PlayerControl : MonoBehaviour
             }
             isControlled = true;
         } else {
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x / 1.05f, rb.angularVelocity.y, rb.angularVelocity.z);
+            if (difficulty == DifficultyLevel.Easy) {
+                rb.angularVelocity = new Vector3(rb.angularVelocity.x / 1.05f, rb.angularVelocity.y, rb.angularVelocity.z);
+            }
         }
 
         // Mouse horizontal input
@@ -94,12 +99,15 @@ public class PlayerControl : MonoBehaviour
             rb.AddTorque(transform.up * mouseXValue * mouseXMultiplier);
             isControlled = true;
         } else {
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y / 1.03f, rb.angularVelocity.z);
+            if (difficulty == DifficultyLevel.Easy) {
+                rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y / 1.03f, rb.angularVelocity.z);
+            }
         }
 
         // Forward rotation restriction 
-        if ((transform.rotation.x > maximumXRotation) 
-            || (transform.rotation.x < -maximumXRotation)) {
+        if (((transform.rotation.x > maximumXRotation) 
+            || (transform.rotation.x < -maximumXRotation))
+            && difficulty == DifficultyLevel.Easy) {
             // Another option - strictly limit rotation:
             // transform.rotation = new Quaternion(
             //     // just to avoid to "if"s for > 0 and < 0
@@ -127,6 +135,7 @@ public class PlayerControl : MonoBehaviour
             Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
             rb.AddTorque(torqueVector * stabilitySpeed * stabilitySpeed);
         }
+
         // Reset rotation position when on the ground
         if (Input.GetKey(KeyCode.Space) && isTouchingGround) {
             // Reset except for horizontal rotation
@@ -163,5 +172,10 @@ public class PlayerControl : MonoBehaviour
         if (coll.gameObject.tag == "ground") {
             isTouchingGround = true;
         }
+        
+    }
+
+    public void DifficultyToggle(bool tog) {
+        difficulty = tog ? DifficultyLevel.Hard : DifficultyLevel.Easy;
     }
 }

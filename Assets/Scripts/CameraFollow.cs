@@ -9,33 +9,39 @@ public class CameraFollow : MonoBehaviour
 
     // Camera offset
     public Vector3 offset = new Vector3(0, 1.6f, -3.3f);
-    // Start is called before the first frame update
+
+    public bool isDynamicCamera = false;
 
     void LateUpdate()
     {   
         // camera orientation that everytime in the back of the player (with rotation)
         Vector3 backOfToFollow = toFollow.transform.forward * offset.z +
             toFollow.transform.up * offset.y;
-        
-        // Interpolation with a camera that doesn't track a player rotation
-        // up orientation
-        float y_ = (backOfToFollow.y + 5f) / 5f;
-        // back orientation
-        float z_ = (backOfToFollow.z - toFollow.transform.forward.z * 5f) / 2.5f;
+        // Save up scaler of the vector
+        float staticY = backOfToFollow.y;
 
-        // Other options
-        // float y_ = backOfToFollow.y;
-        // float y_ = offset.y;
-        backOfToFollow = new Vector3(backOfToFollow.x, y_, z_);
+        // Dynamic camera rotates up and down a little
+        if (isDynamicCamera) {
+            // set up scaler to 0 and normalize
+            backOfToFollow = new Vector3(backOfToFollow.x, 0, backOfToFollow.z);
+            backOfToFollow = -Vector3.Normalize(backOfToFollow) * offset.z;
+            // return up scaler back and average it with straight up orientation
+            backOfToFollow = backOfToFollow + Vector3.up * (offset.y + staticY) / 2;
+        }
+
         transform.position = toFollow.transform.position +
-            // - toFollow.transform.forward * 2 + offset;
             backOfToFollow;
         transform.LookAt(toFollow.transform.position);
+                        //  + toFollow.transform.up * 0.5f);
 
         // Fix camera moving under the ground
         if (transform.position.y < 0.5f) {
             transform.position = new Vector3(transform.position.x,
                 0.5f, transform.position.z);
         }
+    }
+
+    public void CameraToggle(bool tog) {
+        isDynamicCamera = tog;
     }
 }
