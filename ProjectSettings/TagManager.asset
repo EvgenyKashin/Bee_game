@@ -6,6 +6,8 @@ TagManager:
   tags:
   - windZone
   - ground
+  - enemy
+  - player
   layers:
   - Default
   - TransparentFX

@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour
     public GameObject toFollow;
 
     // Camera offset
-    public Vector3 offset = new Vector3(0, 1.6f, -3.3f);
+    public Vector3 offset = new Vector3(0, 0.7f, -3f);
 
     public bool isDynamicCamera = false;
 
