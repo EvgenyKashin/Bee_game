@@ -8,6 +8,8 @@ TagManager:
   - ground
   - enemy
   - player
+  - healthBar
+  - enemyDamager
   layers:
   - Default
   - TransparentFX

@@ -10,7 +10,7 @@ public class CameraFollow : MonoBehaviour
     // Camera offset
     public Vector3 offset = new Vector3(0, 0.7f, -3f);
 
-    public bool isDynamicCamera = false;
+    public bool isDynamicCamera = true;
 
     void LateUpdate()
     {   

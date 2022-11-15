@@ -20,6 +20,7 @@ public class WaspControl : MonoBehaviour
     public float verticalForce = 2;
     public float movementForce = 0.2f;
     public float rotationForce = 0.3f;
+    public float damagePerTouch = 0.3f;
 
     private float patrolThreshold = 0.5f;
     // Start is called before the first frame update

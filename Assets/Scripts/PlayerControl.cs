@@ -26,10 +26,13 @@ public class PlayerControl : MonoBehaviour
     //   Restrictions' controls
     public float maximumXRotation = 0.3f;
     public float xRotationDecay = 1.05f;
+    //   Health Points controls
+    public float maxHP = 100;
 
     // Components
     private GameObject windZone;
     private Rigidbody rb;
+    private HealthBar healthBar;
 
     // Binary flags
     private bool inWindZone = false;
@@ -50,6 +53,11 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.maxAngularVelocity = 2;
+
+        healthBar = GameObject.FindGameObjectsWithTag("healthBar")[0].GetComponent<HealthBar>();
+        healthBar.HealthPointsMax = maxHP;
+        healthBar.HealthPoints = maxHP;
+
     }
 
     void FixedUpdate()
@@ -168,11 +176,22 @@ public class PlayerControl : MonoBehaviour
     }
 
     void OnCollisionStay(Collision coll) 
-    {   
+    {       
+        // For reseting by "Space" key
         if (coll.gameObject.tag == "ground") {
             isTouchingGround = true;
         }
         
+        // Damage from enemies 
+        // Called every physics update, aka FixedUpdate
+        if (coll.gameObject.tag == "enemy") {
+            if (coll.collider.gameObject.tag == "enemyDamager") {
+                WaspControl waspControl = coll.gameObject.GetComponent<WaspControl>();
+                healthBar.HealthPoints -= waspControl.damagePerTouch;
+            } else {
+                // Do some VFX
+            }
+        }
     }
 
     public void DifficultyToggle(bool tog) {
