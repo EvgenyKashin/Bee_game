@@ -96,7 +96,7 @@ public class WaspControl : MonoBehaviour
             }
             yToMove = Mathf.Max(yToMove, minHeight);
 
-            Vector2 direction = pointToMove - getPosition2d();
+            Vector2 direction = (pointToMove - getPosition2d()).normalized;
             rb.AddForce(get3dfrom2d(direction) * movementForce);
             
             if (transform.position.y < yToMove) {
@@ -107,11 +107,11 @@ public class WaspControl : MonoBehaviour
             rb.AddTorque(new Vector3(rotation.x, rotation.y, rotation.z) * rotation.w * rotationForce);
         }
 
-        // Air drag force to make flying slower
-        Vector3 dragDirection = -rb.velocity.normalized;
-        float velocityMag = rb.velocity.magnitude;
-        rb.AddForce(velocityMag * velocityMag * dragDirection 
-            * playerControl.airResistance);
+        // // Air drag force to make flying slower
+        // Vector3 dragDirection = -rb.velocity.normalized;
+        // float velocityMag = rb.velocity.magnitude;
+        // rb.AddForce(velocityMag * velocityMag * dragDirection 
+        //     * playerControl.airResistance);
         
         Vector3 predictedUp = Quaternion.AngleAxis(
             rb.angularVelocity.magnitude * Mathf.Rad2Deg * playerControl.stabilityForce / playerControl.stabilitySpeed,
