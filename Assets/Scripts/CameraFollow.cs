@@ -21,6 +21,7 @@ public class CameraFollow : MonoBehaviour
         float staticY = backOfToFollow.y;
 
         // Dynamic camera rotates up and down a little
+        // Dynamic camera is trying to preserve horizon rotation to prevent motion sickness
         if (isDynamicCamera) {
             // set up scaler to 0 and normalize
             backOfToFollow = new Vector3(backOfToFollow.x, 0, backOfToFollow.z);
