@@ -89,8 +89,10 @@ public class PlayerControl : MonoBehaviour
 
         // Horizontal input
         if (Mathf.Abs(horizontalInput) > 0.01f) {
-            // OR rb.AddRelativeForce(Vector3.forward..)
-            rb.AddTorque(-transform.forward * horizontalInput * horizontalForseMultiplier);
+            // // OR rb.AddRelativeForce(Vector3.forward..)
+            // rb.AddTorque(-transform.forward * horizontalInput * horizontalForseMultiplier);
+            // isControlled = true;
+            rb.AddTorque(transform.up * horizontalInput * horizontalForseMultiplier);
             isControlled = true;
         } 
 
@@ -107,7 +109,10 @@ public class PlayerControl : MonoBehaviour
 
         // Mouse horizontal input
         if (Mathf.Abs(mouseXValue) > mouseNeutralZone) {
-            rb.AddTorque(transform.up * mouseXValue * mouseXMultiplier);
+            // rb.AddTorque(transform.up * mouseXValue * mouseXMultiplier);
+            // isControlled = true;
+            // OR rb.AddRelativeForce(Vector3.forward..)
+            rb.AddTorque(-transform.forward * mouseXValue * mouseXMultiplier);
             isControlled = true;
         }
 

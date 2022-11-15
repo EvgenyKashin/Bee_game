@@ -8,7 +8,7 @@ PhysicMaterial:
   m_PrefabAsset: {fileID: 0}
   m_Name: BioMaterial
   dynamicFriction: 0.001
-  staticFriction: 0.2
+  staticFriction: 0.3
   bounciness: 0.8
   frictionCombine: 0
   bounceCombine: 0
