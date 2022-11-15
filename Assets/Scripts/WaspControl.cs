@@ -30,6 +30,7 @@ public class WaspControl : MonoBehaviour
         playerControl = player.GetComponent<PlayerControl>();
         material = GetComponent<Renderer>().material;
 
+        patrolReturnPoint = new Vector2(transform.position.x, transform.position.z);
         transform.position = new Vector3(patrolReturnPoint.x,
             patrolHeight, patrolReturnPoint.y);
         nextPoint = patrolReturnPoint;
@@ -92,7 +93,6 @@ public class WaspControl : MonoBehaviour
         rb.AddForce(get3dfrom2d(direction) * movementForce);
         
         if (transform.position.y < yToMove) {
-            Debug.Log("UP");
             rb.AddForce(Vector3.up * verticalForce);
         }
 
