@@ -11,6 +11,8 @@ public class WaspControl : MonoBehaviour
     public Vector2 patrolReturnPoint = new Vector2(0, 15);
     public float patrolRadius = 5;
     public float patrolHeight = 3;
+    public float minHeight = 1f;
+
     public float maxHeight = 5;
     public float visionRadius = 10;
     public Vector2 nextPoint;
@@ -88,8 +90,8 @@ public class WaspControl : MonoBehaviour
             yToMove = patrolHeight + Random.Range(-0.2f, 0.2f);
             material.color = Color.gray;
         }
+        yToMove = Mathf.Max(yToMove, minHeight);
 
-        
         Vector2 direction = pointToMove - getPosition2d();
         rb.AddForce(get3dfrom2d(direction) * movementForce);
         

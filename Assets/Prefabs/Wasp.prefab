@@ -230,9 +230,11 @@ MonoBehaviour:
   patrolReturnPoint: {x: 0, y: 15}
   patrolRadius: 5
   patrolHeight: 2
-  maxHeight: 10
-  visionRadius: 10
+  minHeight: 1
+  maxHeight: 5
+  visionRadius: 8
   nextPoint: {x: 0, y: 0}
   verticalForce: 3
   movementForce: 0.2
   rotationForce: 0.3
+  damagePerTouch: 0.3
