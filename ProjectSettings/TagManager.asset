@@ -10,6 +10,7 @@ TagManager:
   - player
   - healthBar
   - enemyDamager
+  - text
   layers:
   - Default
   - TransparentFX

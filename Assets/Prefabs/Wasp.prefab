@@ -91,7 +91,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2405796615884660879}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d09cb5dbf7ff444488f34ced5b9a1f35, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -191,7 +191,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5968141028446682257}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d09cb5dbf7ff444488f34ced5b9a1f35, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -228,13 +228,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   patrolReturnPoint: {x: 0, y: 15}
-  patrolRadius: 5
+  patrolRadius: 10
   patrolHeight: 2
   minHeight: 1
   maxHeight: 5
   visionRadius: 8
   nextPoint: {x: 0, y: 0}
-  verticalForce: 3
-  movementForce: 0.2
-  rotationForce: 0.3
-  damagePerTouch: 0.3
+  verticalForce: 10
+  movementForce: 0.5
+  rotationForce: 1.2
+  damagePerTouch: 0.4
+  updateEachNFrame: 3
