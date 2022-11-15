@@ -71,6 +71,16 @@ public class PlayerControl : MonoBehaviour
         mouseXValue = Mathf.Clamp(Input.mousePosition.x / Screen.width, 0, 1) - 0.5f;
         mouseYValue = Mathf.Clamp(Input.mousePosition.y / Screen.height, 0, 1) - 0.5f;
 
+        // Forward rotation restriction 
+        float xEulerRotation = Mathf.Sin(transform.eulerAngles.x * 2 * Mathf.PI /  360);
+        if (difficulty == DifficultyLevel.Easy) {
+            if (xEulerRotation > maximumXRotation) {
+                mouseYValue = Mathf.Min(mouseYValue, 0);
+            } else if (xEulerRotation < -maximumXRotation) {
+                mouseYValue = Mathf.Max(mouseYValue, 0);
+            }
+        }
+
         // Vertical input
         if (Mathf.Abs(verticalInput) > 0.01f) {
             rb.AddForce(transform.up * verticalInput * verticalForseMultiplier);
@@ -82,11 +92,7 @@ public class PlayerControl : MonoBehaviour
             // OR rb.AddRelativeForce(Vector3.forward..)
             rb.AddTorque(-transform.forward * horizontalInput * horizontalForseMultiplier);
             isControlled = true;
-        } else {
-            if (difficulty == DifficultyLevel.Easy) {
-                rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z / 1.05f);
-            }
-        }
+        } 
 
         // Mouse vertical input
         if (Mathf.Abs(mouseYValue) > mouseNeutralZone) {
@@ -97,44 +103,13 @@ public class PlayerControl : MonoBehaviour
                 rb.AddForce(transform.forward * mouseYValue * mouseYFrontMultiplier);
             }
             isControlled = true;
-        } else {
-            if (difficulty == DifficultyLevel.Easy) {
-                rb.angularVelocity = new Vector3(rb.angularVelocity.x / 1.05f, rb.angularVelocity.y, rb.angularVelocity.z);
-            }
-        }
+        } 
 
         // Mouse horizontal input
         if (Mathf.Abs(mouseXValue) > mouseNeutralZone) {
             rb.AddTorque(transform.up * mouseXValue * mouseXMultiplier);
             isControlled = true;
-        } else {
-            if (difficulty == DifficultyLevel.Easy) {
-                rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y / 1.03f, rb.angularVelocity.z);
-            }
         }
-
-        
-        // Forward rotation restriction 
-        float xEulerRotation = Mathf.Sin(transform.eulerAngles.x * 2 * Mathf.PI /  360);
-        if (Mathf.Abs(xEulerRotation) > 0.5
-                && difficulty == DifficultyLevel.Easy) {
-            // Another option - strictly limit rotation:
-            // transform.localRotation = new Quaternion(
-            //     // just to avoid to "if"s for > 0 and < 0
-            //     maximumXRotation * (transform.localRotation.x > 0 ? 1 : -1),
-            //     transform.localRotation.y, transform.localRotation.z, transform.localRotation.w);
-
-            // Limit rotation velocity after maximumXRotation is achieved
-            // rb.angularVelocity = new Vector3(rb.angularVelocity.x / 2, rb.angularVelocity.y, rb.angularVelocity.z / 2);
-            Vector3 localAngularVelocity = transform.InverseTransformDirection(rb.angularVelocity);
-            localAngularVelocity = new Vector3(localAngularVelocity.x / xRotationDecay, localAngularVelocity.y, localAngularVelocity.z);
-            rb.angularVelocity = transform.InverseTransformDirection(localAngularVelocity);
-        }
-
-        // Air drag force to make flying slower
-        Vector3 dragDirection = -rb.velocity.normalized;
-        float velocityMag = rb.velocity.magnitude;
-        rb.AddForce(velocityMag * velocityMag * dragDirection * airResistance);
 
         // Some small constant force to the UP direction
         rb.AddForce(Vector3.up * airUpForce);
@@ -163,15 +138,9 @@ public class PlayerControl : MonoBehaviour
 
         // It would be updated by event before each "Update" call
         isTouchingGround = false;
-        // Debug.Log(GameObject.FindGameObjectsWithTag("text")[0]);
 
-        Vector3 localangularvelocity = transform.InverseTransformDirection(GetComponent<Rigidbody>().angularVelocity);
-        float x_ = Mathf.Sin(transform.eulerAngles.x * 2 * Mathf.PI /  360);
         TextMeshProUGUI textInput = GameObject.FindGameObjectsWithTag("text")[0].GetComponent<TextMeshProUGUI>();
-        textInput.text = localangularvelocity.x.ToString("0.00") + " " + localangularvelocity.y.ToString("0.00") + " " + localangularvelocity.z.ToString("0.00");
-        // textInput.text = rb.angularVelocity.x.ToString("0.00") + " " + rb.angularVelocity.y.ToString("0.00") + " " + rb.angularVelocity.z.ToString("0.00");
-        // textInput.text = x_.ToString("0.00") + " " + transform.eulerAngles.y.ToString("0.00") + " " + transform.eulerAngles.z.ToString("0.00");
-        // textInput.text = transform.localRotation.x.ToString("0.00") + " " + transform.localRotation.y.ToString("0.00") + " " + transform.localRotation.z.ToString("0.00");
+        textInput.text = xEulerRotation.ToString("0.00") + " " + transform.eulerAngles.y.ToString("0.00") + " " + transform.eulerAngles.z.ToString("0.00");
     }
 
     void OnTriggerEnter(Collider coll)
