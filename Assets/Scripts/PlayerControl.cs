@@ -18,7 +18,7 @@ public class PlayerControl : MonoBehaviour
     public float mouseXMultiplier = 0.05f;
     public float mouseYMultiplier = 0.05f;
     public float mouseYFrontMultiplier = 1f;
-    public float mouseNeutralZone = 0.1f;
+    public float mouseNeutralZone = 0.2f;
     //   Forces' controls
     public float airResistance = 0.15f;
     public float airUpForce = 0.5f;
@@ -68,8 +68,32 @@ public class PlayerControl : MonoBehaviour
         // Inputs reading
         verticalInput = Input.GetAxis("Vertical");
         horizontalInput = Input.GetAxis("Horizontal");
-        mouseXValue = Mathf.Clamp(Input.mousePosition.x / Screen.width, 0, 1) - 0.5f;
-        mouseYValue = Mathf.Clamp(Input.mousePosition.y / Screen.height, 0, 1) - 0.5f;
+        // Previous controls
+        // mouseXValue = Mathf.Clamp(Input.mousePosition.x / Screen.width, 0, 1) - 0.5f;
+        // mouseYValue = Mathf.Clamp(Input.mousePosition.y / Screen.height, 0, 1) - 0.5f;
+
+        RectTransform joystick = GameObject.FindGameObjectsWithTag("joystick")[0].GetComponent<RectTransform>();
+        float x = joystick.localPosition.x;
+        float y = joystick.localPosition.y;
+        RectTransform joystickParent = joystick.transform.parent.GetComponent<RectTransform>();
+
+        Vector2 direction = new Vector2(Input.mousePosition.x - joystickParent.position.x,
+            Input.mousePosition.y - joystickParent.position.y);
+
+        float angle = Mathf.Atan2(direction.y, direction.x);
+        float newX = Mathf.Cos(angle);
+        float newY = Mathf.Sin(angle);
+
+        float scaler = 800f / Screen.width;
+        float magnitude = Mathf.Min(direction.magnitude, 50 / scaler);
+
+        Vector2 newJoystickPos = new Vector2(newX, newY) * magnitude * scaler;
+        joystick.localPosition = newJoystickPos;
+
+        newJoystickPos /= 50f;
+        mouseYValue = newJoystickPos.y;
+        mouseXValue = newJoystickPos.x;
+
 
         // Forward rotation restriction 
         float xEulerRotation = Mathf.Sin(transform.eulerAngles.x * 2 * Mathf.PI /  360);
@@ -145,7 +169,7 @@ public class PlayerControl : MonoBehaviour
         isTouchingGround = false;
 
         TextMeshProUGUI textInput = GameObject.FindGameObjectsWithTag("text")[0].GetComponent<TextMeshProUGUI>();
-        textInput.text = xEulerRotation.ToString("0.00") + " " + transform.eulerAngles.y.ToString("0.00") + " " + transform.eulerAngles.z.ToString("0.00");
+        textInput.text = xEulerRotation.ToString("0.00");
     }
 
     void OnTriggerEnter(Collider coll)
@@ -180,6 +204,8 @@ public class PlayerControl : MonoBehaviour
                 // Do some VFX
             }
         }
+
+        
     }
 
     public void DifficultyToggle(bool tog) {
