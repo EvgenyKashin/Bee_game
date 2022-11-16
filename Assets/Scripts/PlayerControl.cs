@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerControl : MonoBehaviour
 {   
@@ -16,7 +18,7 @@ public class PlayerControl : MonoBehaviour
     public float mouseXMultiplier = 0.05f;
     public float mouseYMultiplier = 0.05f;
     public float mouseYFrontMultiplier = 1f;
-    public float mouseNeutralZone = 0.1f;
+    public float mouseNeutralZone = 0.2f;
     //   Forces' controls
     public float airResistance = 0.15f;
     public float airUpForce = 0.5f;
@@ -25,10 +27,13 @@ public class PlayerControl : MonoBehaviour
     //   Restrictions' controls
     public float maximumXRotation = 0.3f;
     public float xRotationDecay = 1.05f;
+    //   Health Points controls
+    public float maxHP = 100;
 
     // Components
     private GameObject windZone;
     private Rigidbody rb;
+    private HealthBar healthBar;
 
     // Binary flags
     private bool inWindZone = false;
@@ -49,6 +54,11 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.maxAngularVelocity = 2;
+
+        healthBar = GameObject.FindGameObjectsWithTag("healthBar")[0].GetComponent<HealthBar>();
+        healthBar.HealthPointsMax = maxHP;
+        healthBar.HealthPoints = maxHP;
+
     }
 
     void FixedUpdate()
@@ -58,8 +68,42 @@ public class PlayerControl : MonoBehaviour
         // Inputs reading
         verticalInput = Input.GetAxis("Vertical");
         horizontalInput = Input.GetAxis("Horizontal");
-        mouseXValue = Mathf.Clamp(Input.mousePosition.x / Screen.width, 0, 1) - 0.5f;
-        mouseYValue = Mathf.Clamp(Input.mousePosition.y / Screen.height, 0, 1) - 0.5f;
+        // Previous controls
+        // mouseXValue = Mathf.Clamp(Input.mousePosition.x / Screen.width, 0, 1) - 0.5f;
+        // mouseYValue = Mathf.Clamp(Input.mousePosition.y / Screen.height, 0, 1) - 0.5f;
+
+        RectTransform joystick = GameObject.FindGameObjectsWithTag("joystick")[0].GetComponent<RectTransform>();
+        float x = joystick.localPosition.x;
+        float y = joystick.localPosition.y;
+        RectTransform joystickParent = joystick.transform.parent.GetComponent<RectTransform>();
+
+        Vector2 direction = new Vector2(Input.mousePosition.x - joystickParent.position.x,
+            Input.mousePosition.y - joystickParent.position.y);
+
+        float angle = Mathf.Atan2(direction.y, direction.x);
+        float newX = Mathf.Cos(angle);
+        float newY = Mathf.Sin(angle);
+
+        float scaler = 800f / Screen.width;
+        float magnitude = Mathf.Min(direction.magnitude, 50 / scaler);
+
+        Vector2 newJoystickPos = new Vector2(newX, newY) * magnitude * scaler;
+        joystick.localPosition = newJoystickPos;
+
+        newJoystickPos /= 50f;
+        mouseYValue = newJoystickPos.y;
+        mouseXValue = newJoystickPos.x;
+
+
+        // Forward rotation restriction 
+        float xEulerRotation = Mathf.Sin(transform.eulerAngles.x * 2 * Mathf.PI /  360);
+        if (difficulty == DifficultyLevel.Easy) {
+            if (xEulerRotation > maximumXRotation) {
+                mouseYValue = Mathf.Min(mouseYValue, 0);
+            } else if (xEulerRotation < -maximumXRotation) {
+                mouseYValue = Mathf.Max(mouseYValue, 0);
+            }
+        }
 
         // Vertical input
         if (Mathf.Abs(verticalInput) > 0.01f) {
@@ -69,12 +113,12 @@ public class PlayerControl : MonoBehaviour
 
         // Horizontal input
         if (Mathf.Abs(horizontalInput) > 0.01f) {
-            // OR rb.AddRelativeForce(Vector3.forward..)
-            rb.AddTorque(-transform.forward * horizontalInput * horizontalForseMultiplier);
+            // // OR rb.AddRelativeForce(Vector3.forward..)
+            // rb.AddTorque(-transform.forward * horizontalInput * horizontalForseMultiplier);
+            // isControlled = true;
+            rb.AddTorque(transform.up * horizontalInput * horizontalForseMultiplier);
             isControlled = true;
-        } else {
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z / 1.05f);
-        }
+        } 
 
         // Mouse vertical input
         if (Mathf.Abs(mouseYValue) > mouseNeutralZone) {
@@ -85,38 +129,30 @@ public class PlayerControl : MonoBehaviour
                 rb.AddForce(transform.forward * mouseYValue * mouseYFrontMultiplier);
             }
             isControlled = true;
-        } else {
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x / 1.05f, rb.angularVelocity.y, rb.angularVelocity.z);
-        }
+        } 
 
         // Mouse horizontal input
         if (Mathf.Abs(mouseXValue) > mouseNeutralZone) {
-            rb.AddTorque(transform.up * mouseXValue * mouseXMultiplier);
+            // rb.AddTorque(transform.up * mouseXValue * mouseXMultiplier);
+            // isControlled = true;
+            // OR rb.AddRelativeForce(Vector3.forward..)
+            rb.AddTorque(-transform.forward * mouseXValue * mouseXMultiplier);
             isControlled = true;
-        } else {
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x, rb.angularVelocity.y / 1.03f, rb.angularVelocity.z);
         }
-
-        // Forward rotation restriction 
-        if ((transform.rotation.x > maximumXRotation) 
-            || (transform.rotation.x < -maximumXRotation)) {
-            // Another option - strictly limit rotation:
-            // transform.rotation = new Quaternion(
-            //     // just to avoid to "if"s for > 0 and < 0
-            //     maximumXRotation * (transform.rotation.x > 0 ? 1 : -1),
-            //     transform.rotation.y, transform.rotation.z, transform.rotation.w);
-
-            // Limit rotation velocity after maximumXRotation is achieved
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x / xRotationDecay, rb.angularVelocity.y, rb.angularVelocity.z);
-        }
-
-        // Air drag force to make flying slower
-        Vector3 dragDirection = -rb.velocity.normalized;
-        float velocityMag = rb.velocity.magnitude;
-        rb.AddForce(velocityMag * velocityMag * dragDirection * airResistance);
 
         // Some small constant force to the UP direction
         rb.AddForce(Vector3.up * airUpForce);
+
+        // Reset player
+        if (Input.GetKey(KeyCode.Space)) {
+            if (isTouchingGround) {
+                // Reset rotation position when on the ground
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+            } else {
+                // Stabilize
+                isControlled = false;
+            }
+        }
 
         // Helping stabilization when there are no inputs control
         if (!isControlled && difficulty == DifficultyLevel.Easy) {
@@ -127,11 +163,6 @@ public class PlayerControl : MonoBehaviour
             Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
             rb.AddTorque(torqueVector * stabilitySpeed * stabilitySpeed);
         }
-        // Reset rotation position when on the ground
-        if (Input.GetKey(KeyCode.Space) && isTouchingGround) {
-            // Reset except for horizontal rotation
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-        }
 
         // Wind force
         if (inWindZone) {
@@ -141,6 +172,9 @@ public class PlayerControl : MonoBehaviour
 
         // It would be updated by event before each "Update" call
         isTouchingGround = false;
+
+        TextMeshProUGUI textInput = GameObject.FindGameObjectsWithTag("text")[0].GetComponent<TextMeshProUGUI>();
+        textInput.text = xEulerRotation.ToString("0.00");
     }
 
     void OnTriggerEnter(Collider coll)
@@ -159,9 +193,27 @@ public class PlayerControl : MonoBehaviour
     }
 
     void OnCollisionStay(Collision coll) 
-    {   
+    {       
+        // For reseting by "Space" key
         if (coll.gameObject.tag == "ground") {
             isTouchingGround = true;
         }
+        
+        // Damage from enemies 
+        // Called every physics update, aka FixedUpdate
+        if (coll.gameObject.tag == "enemy") {
+            if (coll.collider.gameObject.tag == "enemyDamager") {
+                WaspControl waspControl = coll.gameObject.GetComponent<WaspControl>();
+                healthBar.HealthPoints -= waspControl.damagePerTouch;
+            } else {
+                // Do some VFX
+            }
+        }
+
+        
+    }
+
+    public void DifficultyToggle(bool tog) {
+        difficulty = tog ? DifficultyLevel.Hard : DifficultyLevel.Easy;
     }
 }

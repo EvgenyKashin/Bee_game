@@ -6,6 +6,12 @@ TagManager:
   tags:
   - windZone
   - ground
+  - enemy
+  - player
+  - healthBar
+  - enemyDamager
+  - text
+  - joystick
   layers:
   - Default
   - TransparentFX
