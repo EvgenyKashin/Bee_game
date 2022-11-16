@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33000011434862702}
   - component: {fileID: 23000012424984624}
   - component: {fileID: -4377355755058196942}
+  - component: {fileID: 7175947918057587036}
   m_Layer: 0
   m_Name: SphereGemLarge1
   m_TagString: Untagged
@@ -108,3 +109,15 @@ MonoBehaviour:
   endScale: {x: 0, y: 0, z: 0}
   scaleSpeed: 0
   scaleRate: 0
+--- !u!114 &7175947918057587036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010728489230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a545c91ff932b749a7d59ca442c2a7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
