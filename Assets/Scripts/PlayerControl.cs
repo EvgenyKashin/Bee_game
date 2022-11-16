@@ -143,6 +143,17 @@ public class PlayerControl : MonoBehaviour
         // Some small constant force to the UP direction
         rb.AddForce(Vector3.up * airUpForce);
 
+        // Reset player
+        if (Input.GetKey(KeyCode.Space)) {
+            if (isTouchingGround) {
+                // Reset rotation position when on the ground
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+            } else {
+                // Stabilize
+                isControlled = false;
+            }
+        }
+
         // Helping stabilization when there are no inputs control
         if (!isControlled && difficulty == DifficultyLevel.Easy) {
             Vector3 predictedUp = Quaternion.AngleAxis(
@@ -151,12 +162,6 @@ public class PlayerControl : MonoBehaviour
             ) * transform.up;
             Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
             rb.AddTorque(torqueVector * stabilitySpeed * stabilitySpeed);
-        }
-
-        // Reset rotation position when on the ground
-        if (Input.GetKey(KeyCode.Space) && isTouchingGround) {
-            // Reset except for horizontal rotation
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
 
         // Wind force
