@@ -49,6 +49,9 @@ public class PlayerControl : MonoBehaviour
     private float mouseXValue;
     private float mouseYValue;
 
+    private TextMeshProUGUI textInput;
+    private int currentScore = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,6 +62,13 @@ public class PlayerControl : MonoBehaviour
         healthBar.HealthPointsMax = maxHP;
         healthBar.HealthPoints = maxHP;
 
+        textInput = GameObject.FindGameObjectsWithTag("text")[0].GetComponent<TextMeshProUGUI>();
+    }
+
+    public void IncreaseScore()
+    {
+        currentScore += 1;
+        textInput.text = currentScore.ToString();
     }
 
     void FixedUpdate()
@@ -172,9 +182,6 @@ public class PlayerControl : MonoBehaviour
 
         // It would be updated by event before each "Update" call
         isTouchingGround = false;
-
-        TextMeshProUGUI textInput = GameObject.FindGameObjectsWithTag("text")[0].GetComponent<TextMeshProUGUI>();
-        textInput.text = xEulerRotation.ToString("0.00");
     }
 
     void OnTriggerEnter(Collider coll)

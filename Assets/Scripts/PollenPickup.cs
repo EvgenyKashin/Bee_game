@@ -1,28 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class PollenPickup : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private PlayerControl playerControl;
+
     void Start()
     {
-        
+        playerControl = GameObject.FindGameObjectsWithTag("player")[0].GetComponent<PlayerControl>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-      
-    }
 
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
         {
  
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.tag == "player")
            {
                     Destroy (gameObject);
-                    //or gameObject.SetActive(false);
+                    playerControl.IncreaseScore(); 
            }
         }
 }
