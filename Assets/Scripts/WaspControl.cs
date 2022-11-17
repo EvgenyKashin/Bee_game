@@ -27,6 +27,9 @@ public class WaspControl : MonoBehaviour
     private float patrolThreshold = 0.5f;
     public int updateEachNFrame = 5;
     private int frameUpdated = 0;
+
+    public float timeForCurrentPoint = 0;
+    public float maxTimeForOnePoint = 10f;
     void Start()
     {
         player = GameObject.FindGameObjectsWithTag("player")[0];
@@ -65,14 +68,17 @@ public class WaspControl : MonoBehaviour
     
     Vector2 getNextPoint() 
     {   
-        // Overwise, patrol to the next point
+        // Timer to prevent following one point for too long (stucking)
+        timeForCurrentPoint += Time.deltaTime;
         float distance = getDistance2d(nextPoint);
-        if (distance < patrolThreshold) {
-            // Sample a new point
+        if (distance < patrolThreshold || timeForCurrentPoint > maxTimeForOnePoint) {
+            // Patrol to the next sampled point
             float randomAngle = Random.Range(0, Mathf.PI * 2);
             float x = Mathf.Cos(randomAngle);
             float y = Mathf.Sin(randomAngle);
             nextPoint = patrolReturnPoint + new Vector2(x, y) * patrolRadius;
+            // Reset timer
+            timeForCurrentPoint = 0;
         }
         return nextPoint;
     }
@@ -89,6 +95,8 @@ public class WaspControl : MonoBehaviour
                 pointToMove = get2dfrom3d(player.transform.position);
                 yToMove = Mathf.Min(player.transform.position.y, maxHeight);
                 material.color = Color.red;
+                // Reset timer
+                timeForCurrentPoint = 0;
             } else {
                 pointToMove = getNextPoint();
                 yToMove = patrolHeight + Random.Range(-0.2f, 0.2f);
