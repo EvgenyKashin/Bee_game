@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {   
@@ -51,6 +52,7 @@ public class PlayerControl : MonoBehaviour
 
     private TextMeshProUGUI textInput;
     private int currentScore = 0;
+    private bool isJoystickActivated = false;
 
     // Start is called before the first frame update
     void Start()
@@ -95,16 +97,27 @@ public class PlayerControl : MonoBehaviour
         float newX = Mathf.Cos(angle);
         float newY = Mathf.Sin(angle);
 
-        float scaler = 800f / Screen.width;
-        float magnitude = Mathf.Min(direction.magnitude, 50 / scaler);
+        float scaler = 700f / Screen.width;
+        float magSclaer = 50 / scaler;
+        float magnitude = Mathf.Min(direction.magnitude, magSclaer);
 
-        Vector2 newJoystickPos = new Vector2(newX, newY) * magnitude * scaler;
-        joystick.localPosition = newJoystickPos;
+        // Activate joystick after the first touch
+        if (magnitude < magSclaer) {
+            isJoystickActivated = true;
+        } else {
+            isJoystickActivated = false;
+        }
+        
+        if (isJoystickActivated) {
+            Vector2 newJoystickPos = new Vector2(newX, newY) * magnitude * scaler;
+            joystick.localPosition = newJoystickPos;
 
-        newJoystickPos /= 50f;
-        mouseYValue = newJoystickPos.y;
-        mouseXValue = newJoystickPos.x;
-
+            newJoystickPos /= 50f;
+            mouseYValue = newJoystickPos.y;
+            mouseXValue = newJoystickPos.x;
+        } else {
+            joystick.localPosition = Vector2.zero;
+        }
 
         // Forward rotation restriction 
         float xEulerRotation = Mathf.Sin(transform.eulerAngles.x * 2 * Mathf.PI /  360);
@@ -183,6 +196,10 @@ public class PlayerControl : MonoBehaviour
 
         // It would be updated by event before each "Update" call
         isTouchingGround = false;
+
+        if (Input.GetKey(KeyCode.Escape)) {
+            SceneManager.LoadScene("MenuScene");
+        }
     }
 
     void OnTriggerEnter(Collider coll)
@@ -213,6 +230,9 @@ public class PlayerControl : MonoBehaviour
             if (coll.collider.gameObject.tag == "enemyDamager") {
                 WaspControl waspControl = coll.gameObject.GetComponent<WaspControl>();
                 healthBar.HealthPoints -= waspControl.damagePerTouch;
+                if (healthBar.HealthPoints <= 0) {
+                    EndGame();
+                }
             } else {
                 // Do some VFX
             }
@@ -223,5 +243,16 @@ public class PlayerControl : MonoBehaviour
 
     public void DifficultyToggle(bool tog) {
         difficulty = tog ? DifficultyLevel.Hard : DifficultyLevel.Easy;
+    }
+
+    public void EndGame()
+    {
+        rb.isKinematic = true;
+        Invoke("RestartGame", 2f);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
