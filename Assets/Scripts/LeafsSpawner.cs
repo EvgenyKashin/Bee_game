@@ -28,8 +28,6 @@ public class LeafsSpawner : MonoBehaviour
             float z = currentPos.z + Random.Range( -meshCol.bounds.size.z / 2, meshCol.bounds.size.z / 2 );
 
             randomPos = currentPos + new Vector3(x, 0, z);
-            Debug.Log(randomPos);
-
             GameObject go = Instantiate(spawningObject, randomPos, transform.rotation);
             go.transform.rotation = Random.rotation;
         }
