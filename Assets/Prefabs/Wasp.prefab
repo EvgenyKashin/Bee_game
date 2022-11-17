@@ -333,7 +333,7 @@ MonoBehaviour:
   verticalForce: 10
   movementForce: 3
   rotationForce: 10
-  damagePerTouch: 0.6
+  damagePerTouch: 0.5
   updateEachNFrame: 3
   timeForCurrentPoint: 0
   maxTimeForOnePoint: 10
