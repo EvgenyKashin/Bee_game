@@ -47,8 +47,8 @@ public class PlayerControl : MonoBehaviour
     // Internal variables
     private float verticalInput;
     private float horizontalInput;
-    private float mouseXValue;
-    private float mouseYValue;
+    private float mouseXValue = 0;
+    private float mouseYValue = 0;
 
     private TextMeshProUGUI textInput;
     private int currentScore = 0;
@@ -97,17 +97,18 @@ public class PlayerControl : MonoBehaviour
         float newX = Mathf.Cos(angle);
         float newY = Mathf.Sin(angle);
 
-        float scaler = 700f / Screen.width;
-        float magSclaer = 50 / scaler;
-        float magnitude = Mathf.Min(direction.magnitude, magSclaer);
+        float scaler = 600f / Screen.width;
+        float magScaler = 50 / scaler;
+        float magnitude = Mathf.Min(direction.magnitude, magScaler);
 
-        // Activate joystick after the first touch
-        if (magnitude < magSclaer) {
+        // Activate joystick when mouse is inside it
+        // Reset joystick if mouse is too far from the center
+        if (direction.magnitude < magScaler) {
             isJoystickActivated = true;
-        } else {
+        } else if (direction.magnitude > magScaler * 3f) {
             isJoystickActivated = false;
         }
-        
+
         if (isJoystickActivated) {
             Vector2 newJoystickPos = new Vector2(newX, newY) * magnitude * scaler;
             joystick.localPosition = newJoystickPos;
@@ -116,6 +117,8 @@ public class PlayerControl : MonoBehaviour
             mouseYValue = newJoystickPos.y;
             mouseXValue = newJoystickPos.x;
         } else {
+            mouseYValue = 0;
+            mouseXValue = 0;
             joystick.localPosition = Vector2.zero;
         }
 
