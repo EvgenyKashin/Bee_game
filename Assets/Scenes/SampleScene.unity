@@ -2100,18 +2100,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e9611b7c11f42489a0cc1f6c29f293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalForseMultiplier: 2
+  verticalForseMultiplier: 3
   horizontalForseMultiplier: 0.05
   mouseXMultiplier: 0.05
   mouseYMultiplier: 0.1
-  mouseYFrontMultiplier: 1.5
-  mouseNeutralZone: 0.1
-  airResistance: 0.15
+  mouseYFrontMultiplier: 2
+  mouseNeutralZone: 0.15
   airUpForce: 0.4
   stabilityForce: 0.2
-  stabilitySpeed: 0.4
+  stabilitySpeed: 0.5
   maximumXRotation: 0.6
-  xRotationDecay: 1.1
   maxHP: 100
   difficulty: 0
 --- !u!54 &478516227
@@ -5095,7 +5093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5968141028446682267, guid: 04c58badf9e8742d994211b4a850b107, type: 3}
       propertyPath: movementForce
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04c58badf9e8742d994211b4a850b107, type: 3}
@@ -8396,7 +8394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882688567}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 57, z: 0}
+  m_LocalPosition: {x: 0, y: 58, z: 0}
   m_LocalScale: {x: 500, y: 100, z: 500}
   m_ConstrainProportionsScale: 0
   m_Children: []

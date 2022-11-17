@@ -21,13 +21,11 @@ public class PlayerControl : MonoBehaviour
     public float mouseYFrontMultiplier = 1f;
     public float mouseNeutralZone = 0.2f;
     //   Forces' controls
-    public float airResistance = 0.15f;
     public float airUpForce = 0.5f;
     public float stabilityForce = 0.1f;
     public float stabilitySpeed = 0.3f;
     //   Restrictions' controls
     public float maximumXRotation = 0.3f;
-    public float xRotationDecay = 1.05f;
     //   Health Points controls
     public float maxHP = 100;
 

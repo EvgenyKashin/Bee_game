@@ -324,14 +324,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   patrolReturnPoint: {x: 0, y: 15}
-  patrolRadius: 8
+  patrolRadius: 9
   patrolHeight: 3
   minHeight: 0.5
   maxHeight: 7
-  visionRadius: 6
+  visionRadius: 8
   nextPoint: {x: 0, y: 0}
   verticalForce: 10
-  movementForce: 3
+  movementForce: 6
   rotationForce: 10
   damagePerTouch: 0.5
   updateEachNFrame: 3
