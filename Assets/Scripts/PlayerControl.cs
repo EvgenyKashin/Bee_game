@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {   
@@ -213,6 +214,9 @@ public class PlayerControl : MonoBehaviour
             if (coll.collider.gameObject.tag == "enemyDamager") {
                 WaspControl waspControl = coll.gameObject.GetComponent<WaspControl>();
                 healthBar.HealthPoints -= waspControl.damagePerTouch;
+                if (healthBar.HealthPoints <= 0) {
+                    EndGame();
+                }
             } else {
                 // Do some VFX
             }
@@ -223,5 +227,16 @@ public class PlayerControl : MonoBehaviour
 
     public void DifficultyToggle(bool tog) {
         difficulty = tog ? DifficultyLevel.Hard : DifficultyLevel.Easy;
+    }
+
+    public void EndGame()
+    {
+        rb.isKinematic = true;
+        Invoke("RestartGame", 2f);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
