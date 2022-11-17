@@ -7,7 +7,7 @@ using TMPro;
 public class PollenPickup : MonoBehaviour
 {
     private float timeAlive;
-    public float timeToLive = 120f;
+    public float timeToLive = 5 * 60f;
 
     void OnTriggerEnter(Collider other)
     {

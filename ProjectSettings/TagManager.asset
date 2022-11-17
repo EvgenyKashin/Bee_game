@@ -12,6 +12,7 @@ TagManager:
   - enemyDamager
   - text
   - joystick
+  - leafSpawner
   layers:
   - Default
   - TransparentFX
