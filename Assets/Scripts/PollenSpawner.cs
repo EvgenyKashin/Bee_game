@@ -10,8 +10,9 @@ public class PollenSpawner : MonoBehaviour
    private int spawnedAlready = 0;
 
    void Start() 
-   {
-		  targetTime = startDelay;
+   {     
+        Random.InitState(gameObject.GetInstanceID());
+		  targetTime = Random.Range(startDelay, startDelay * 2);
    }
    
    void FixedUpdate()

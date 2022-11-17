@@ -6,21 +6,24 @@ using TMPro;
 
 public class PollenPickup : MonoBehaviour
 {
-    private PlayerControl playerControl;
-
-    void Start()
-    {
-        playerControl = GameObject.FindGameObjectsWithTag("player")[0].GetComponent<PlayerControl>();
-    }
-
+    private float timeAlive;
+    public float timeToLive = 60f;
 
     void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "player")
         {
- 
-            if (other.gameObject.tag == "player")
-           {
-                    Destroy (gameObject);
-                    playerControl.IncreaseScore(); 
-           }
+            PlayerControl playerControl = other.gameObject.GetComponent<PlayerControl>();
+            Destroy(gameObject);
+            playerControl.IncreaseScore();
         }
+    }
+
+    void FixedUpdate() 
+    {
+        timeAlive += Time.deltaTime;
+        if (timeAlive > timeToLive) {
+            Destroy(gameObject);
+        }
+    }
 }

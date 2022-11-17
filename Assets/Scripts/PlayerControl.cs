@@ -59,8 +59,9 @@ public class PlayerControl : MonoBehaviour
         rb.maxAngularVelocity = 2;
 
         healthBar = GameObject.FindGameObjectsWithTag("healthBar")[0].GetComponent<HealthBar>();
-        healthBar.HealthPointsMax = maxHP;
-        healthBar.HealthPoints = maxHP;
+        // TODO: fix
+        // healthBar.HealthPointsMax = maxHP;
+        // healthBar.HealthPoints = maxHP;
 
         textInput = GameObject.FindGameObjectsWithTag("text")[0].GetComponent<TextMeshProUGUI>();
     }
