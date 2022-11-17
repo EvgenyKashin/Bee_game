@@ -25,8 +25,6 @@ public class LeafController : MonoBehaviour
 
     void OnTriggerEnter(Collider coll)
     {
-        Debug.Log(coll.tag);
-        Debug.Log(coll);
         if (coll.gameObject.tag == "windZone") {
             windZone = coll.gameObject;
             inWindZone = true;
