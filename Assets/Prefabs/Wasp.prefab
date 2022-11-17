@@ -333,8 +333,10 @@ MonoBehaviour:
   verticalForce: 10
   movementForce: 3
   rotationForce: 10
-  damagePerTouch: 0.4
+  damagePerTouch: 0.6
   updateEachNFrame: 3
+  timeForCurrentPoint: 0
+  maxTimeForOnePoint: 10
 --- !u!1 &8596071651599601784
 GameObject:
   m_ObjectHideFlags: 0
