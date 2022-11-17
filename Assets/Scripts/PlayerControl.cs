@@ -58,7 +58,7 @@ public class PlayerControl : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.maxAngularVelocity = 2;
+        rb.maxAngularVelocity = 2; 
 
         healthBar = GameObject.FindGameObjectsWithTag("healthBar")[0].GetComponent<HealthBar>();
         // TODO: fix
