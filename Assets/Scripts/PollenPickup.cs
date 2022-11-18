@@ -16,6 +16,7 @@ public class PollenPickup : MonoBehaviour
             PlayerControl playerControl = other.gameObject.GetComponent<PlayerControl>();
             Destroy(gameObject);
             playerControl.IncreaseScore();
+            playerControl.PlayPollenCollection();
         }
     }
 

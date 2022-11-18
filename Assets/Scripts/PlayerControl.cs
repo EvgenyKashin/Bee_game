@@ -48,9 +48,15 @@ public class PlayerControl : MonoBehaviour
     private float mouseXValue = 0;
     private float mouseYValue = 0;
 
+    // UI
     private TextMeshProUGUI textInput;
     private int currentScore = 0;
     private bool isJoystickActivated = false;
+
+    // Audio
+    public GameObject collisionAudio;
+    public GameObject windAudio;
+    public GameObject pollenAudio;
 
     // Start is called before the first frame update
     void Start()
@@ -208,6 +214,7 @@ public class PlayerControl : MonoBehaviour
         if (coll.gameObject.tag == "windZone") {
             windZone = coll.gameObject;
             inWindZone = true;
+            windAudio.GetComponent<AudioSource>().Play();
         }
     }
 
@@ -215,6 +222,7 @@ public class PlayerControl : MonoBehaviour
     {   
         if (coll.gameObject.tag == "windZone") {
             inWindZone = false;
+            windAudio.GetComponent<AudioSource>().Stop();
         }
     }
 
@@ -231,6 +239,9 @@ public class PlayerControl : MonoBehaviour
             if (coll.collider.gameObject.tag == "enemyDamager") {
                 WaspControl waspControl = coll.gameObject.GetComponent<WaspControl>();
                 healthBar.HealthPoints -= waspControl.damagePerTouch;
+
+                collisionAudio.GetComponent<AudioSource>().Play();
+
                 if (healthBar.HealthPoints <= 0) {
                     EndGame();
                 }
@@ -255,5 +266,10 @@ public class PlayerControl : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void PlayPollenCollection()
+    {
+        pollenAudio.GetComponent<AudioSource>().Play();
     }
 }
