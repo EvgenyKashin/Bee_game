@@ -7,7 +7,7 @@ public class WaspControl : MonoBehaviour
     public GameObject player;
     private PlayerControl playerControl;
     private Rigidbody rb;
-    private Material material;
+    private Light pointLight;
     public Vector2 patrolReturnPoint = new Vector2(0, 15);
     public float patrolRadius = 5;
     public float patrolHeight = 3;
@@ -37,7 +37,7 @@ public class WaspControl : MonoBehaviour
         rb.maxAngularVelocity = 1.5f;
 
         playerControl = player.GetComponent<PlayerControl>();
-        material = GetComponent<Renderer>().material;
+        pointLight = GetComponentInChildren<Light>();
 
         patrolReturnPoint = new Vector2(transform.position.x, transform.position.z);
         transform.position = new Vector3(patrolReturnPoint.x,
@@ -94,13 +94,13 @@ public class WaspControl : MonoBehaviour
             if (playerDistance < visionRadius) {
                 pointToMove = get2dfrom3d(player.transform.position);
                 yToMove = Mathf.Min(player.transform.position.y, maxHeight);
-                material.color = Color.red;
+                pointLight.color = new Color(246, 76, 2) / 255f;
                 // Reset timer
                 timeForCurrentPoint = 0;
             } else {
                 pointToMove = getNextPoint();
                 yToMove = patrolHeight + Random.Range(-0.2f, 0.2f);
-                material.color = Color.gray;
+                pointLight.color = new Color(255, 167, 49) / 255f;
             }
             yToMove = Mathf.Max(yToMove, minHeight);
 
