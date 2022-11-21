@@ -850,6 +850,9 @@ MonoBehaviour:
   maximumXRotation: 0.6
   maxHP: 100
   difficulty: 0
+  collisionAudio: {fileID: 0}
+  windAudio: {fileID: 0}
+  pollenAudio: {fileID: 0}
 --- !u!54 &210536579
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4674,7 +4677,7 @@ MonoBehaviour:
   flipYMode: 0
   xrRendering: 1
   fullscreenPassthrough: 0
-  allowDynamicResolution: 1
+  allowDynamicResolution: 0
   customRenderingSettings: 0
   invertFaceCulling: 0
   probeLayerMask:
@@ -4817,7 +4820,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 0
-  m_AllowDynamicResolution: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
